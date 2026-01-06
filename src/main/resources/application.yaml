@@ -1,0 +1,14 @@
+spring:
+  application:
+    name: ad-product-api
+  datasource:
+    url: jdbc:postgresql://jerry.world:32222/product
+    username: test
+    password: test
+    driver-class-name: org.postgresql.Driver
+  servlet:
+    multipart:
+      max-file-size: 200MB
+      max-request-size: 200MB
+server:
+  port: 8081
