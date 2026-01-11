@@ -62,8 +62,8 @@ public class ProductService {
             String header = br.readLine();
             if (header == null) return new BulkAddResponse(0, 0, 0);
 
-            if (!header.toLowerCase().startsWith("id,partner_id")) {
-                throw new IllegalArgumentException("Invalid CSV header. Expected: id,partner_id,...");
+            if (!header.toLowerCase().startsWith("id,partner_id,category")) {
+                throw new IllegalArgumentException("Invalid CSV header. Expected: id,partner_id,category,...");
             }
 
             String line;
@@ -77,8 +77,8 @@ public class ProductService {
 
                 // 생성기에서 name에 콤마를 넣지 않는 전제.
                 // (콤마 가능성이 있으면 Commons CSV로 교체 권장)
-                String[] t = line.split(",", 8);
-                if (t.length != 8) {
+                String[] t = line.split(",", 9);
+                if (t.length != 9) {
                     skipped++;
                     continue;
                 }
@@ -86,13 +86,14 @@ public class ProductService {
                 try {
                     Long id = Long.parseLong(t[0].trim());
                     Long partnerId = Long.parseLong(t[1].trim());
-                    String name = t[2].trim();
-                    ProductStatus status = ProductStatus.valueOf(t[3].trim());
-                    Long price = Long.parseLong(t[4].trim());
-                    String imageUrl = emptyToNull(t[5].trim());
+                    int category = Integer.parseInt(t[2].trim());
+                    String name = t[3].trim();
+                    ProductStatus status = ProductStatus.valueOf(t[4].trim());
+                    Long price = Long.parseLong(t[5].trim());
+                    String imageUrl = emptyToNull(t[6].trim());
 
-                    LocalDateTime createdAt = parseDateTime(t[6].trim());
-                    LocalDateTime modifiedAt = parseDateTime(t[7].trim());
+                    LocalDateTime createdAt = parseDateTime(t[7].trim());
+                    LocalDateTime modifiedAt = parseDateTime(t[8].trim());
 
                     if (modifiedAt.isBefore(createdAt)) {
                         skipped++;
@@ -100,7 +101,7 @@ public class ProductService {
                     }
 
                     Product product = Product.of(
-                            id, partnerId, name, status, price, imageUrl, createdAt, modifiedAt
+                            id, partnerId, category, name, status, price, imageUrl, createdAt, modifiedAt
                     );
 
                     // 같은 청크 내 중복 id는 마지막 행으로 덮어쓰기
@@ -216,6 +217,9 @@ public class ProductService {
         return new ProductListResponse.ProductItem(
                 p.getId(),
                 p.getPartnerId(),
+                p.getCategory1(),
+                p.getCategory2(),
+                p.getCategory3(),
                 p.getName(),
                 p.getStatus().name(),
                 p.getPrice(),
@@ -236,6 +240,9 @@ public class ProductService {
                 product.getPrice(),
                 product.getImageUrl(),
                 product.getPartnerId(),
+                product.getCategory1(),
+                product.getCategory2(),
+                product.getCategory3(),
                 product.getCreatedAt(),
                 product.getModifiedAt()
         );

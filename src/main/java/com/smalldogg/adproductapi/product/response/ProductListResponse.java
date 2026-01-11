@@ -10,6 +10,9 @@ public record ProductListResponse(
     public record ProductItem(
             Long id,
             Long partnerId,
+            Integer category1,
+            Integer category2,
+            Integer category3,
             String name,
             String status,
             Long price,

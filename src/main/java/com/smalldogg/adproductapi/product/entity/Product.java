@@ -31,6 +31,15 @@ public class Product {
     @Column(name = "partner_id", nullable = false)
     private Long partnerId;
 
+    @Column(name = "category1", nullable = false)
+    private Integer category1;
+
+    @Column(name = "category2", nullable = false)
+    private Integer category2;
+
+    @Column(name = "category3", nullable = false)
+    private Integer category3;
+
     @Column(name = "name", nullable = false, length = 200)
     private String name;
 
@@ -63,7 +72,7 @@ public class Product {
        ========================= */
     public static Product of(
             Long id,
-            Long partnerId,
+            Long partnerId, int category,
             String name,
             ProductStatus status,
             Long price,
@@ -74,6 +83,9 @@ public class Product {
         Product product = new Product();
         product.id = id;
         product.partnerId = partnerId;
+        product.category1 = (category / 100) * 100;
+        product.category2 = ((category / 10) % 10) * 10;
+        product.category3 = category % 10;
         product.name = name;
         product.status = status;
         product.price = price;

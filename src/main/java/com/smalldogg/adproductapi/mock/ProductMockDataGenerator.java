@@ -62,7 +62,7 @@ public class ProductMockDataGenerator {
 
         try (BufferedWriter w = Files.newBufferedWriter(out, StandardCharsets.UTF_8)) {
             // header
-            w.write("id,partner_id,name,status,price,image_url,created_at,modified_at");
+            w.write("id,partner_id,category,name,status,price,image_url,created_at,modified_at");
             w.newLine();
 
             long id = 1L;
@@ -88,6 +88,7 @@ public class ProductMockDataGenerator {
                 ProductStatus status = randomStatus(rnd);
                 long price = randomPrice(rnd, 100L, 100_000_000L);
                 String imageUrl = "https://cdn.jerry.world/product/thumbnail/" + UUID.randomUUID();
+                int category = randomCategory(rnd);
 
                 // createdAt: 5년 내 랜덤
                 long createdEpoch = randomLong(rnd, startEpoch, endEpoch);
@@ -102,6 +103,7 @@ public class ProductMockDataGenerator {
                 // CSV는 콤마/따옴표 안전하게 처리(이 예시는 name에 콤마를 넣지 않음)
                 w.write(id + "," +
                         partnerId + "," +
+                        category + "," +
                         name + "," +
                         status.name() + "," +
                         price + "," +
@@ -138,6 +140,19 @@ public class ProductMockDataGenerator {
         String[] adj = {"프리미엄", "스탠다드", "에센셜", "리미티드", "베이직", "프로", "라이트", "맥스"};
         String[] noun = {"키트", "세트", "패키지", "상품", "번들", "컬렉션", "옵션", "에디션"};
         return "상품-" + id + "-" + adj[rnd.nextInt(adj.length)] + "-" + noun[rnd.nextInt(noun.length)];
+    }
+
+    /**
+     * 카테고리 코드 생성 (111 ~ 333)
+     * - 100의 자리: category1 (1~3)
+     * - 10의 자리: category2 (1~3)
+     * - 1의 자리: category3 (1~3)
+     */
+    static int randomCategory(SplittableRandom rnd) {
+        int category1 = rnd.nextInt(1, 4); // 1~3
+        int category2 = rnd.nextInt(1, 4); // 1~3
+        int category3 = rnd.nextInt(1, 4); // 1~3
+        return category1 * 100 + category2 * 10 + category3;
     }
 }
 

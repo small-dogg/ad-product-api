@@ -11,6 +11,9 @@ public record ProductApiResponse(
         Long price,
         String imageUrl,
         Long partnerId,
+        Integer category1,
+        Integer category2,
+        Integer category3,
         LocalDateTime createdAt,
         LocalDateTime modifiedAt
 ) {
